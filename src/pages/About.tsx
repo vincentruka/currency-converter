@@ -1,26 +1,6 @@
-import styled from 'styled-components'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Paper } from '../components/ui/Paper'
-
-const Content = styled.div`
-  color: rgba(33, 53, 71, 0.87);
-  line-height: 1.6;
-  text-align: left;
-  font-family: inherit;
-
-  @media (prefers-color-scheme: dark) {
-    color: rgba(255, 255, 255, 0.87);
-  }
-`
-
-const Paragraph = styled.p`
-  margin: 0 0 1rem 0;
-  font-family: inherit;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`
+import { Content, Paragraph } from './About.styles'
 
 export function About() {
   return (

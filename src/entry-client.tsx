@@ -4,12 +4,13 @@ import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider, HydrationBoundary, type DehydratedState } from '@tanstack/react-query'
 import App from './App.tsx'
 import './index.css'
+import { QUERY_CONFIG } from './config/query'
 
 // Create a new QueryClient instance for the client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 60, // 1 hour
+      staleTime: QUERY_CONFIG.staleTime,
     },
   },
 })

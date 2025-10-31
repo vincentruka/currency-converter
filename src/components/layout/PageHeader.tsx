@@ -1,14 +1,11 @@
 import styled from 'styled-components'
 
 const Box = styled.header`
-  margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   text-align: left;
   font-family: inherit;
 
   @media (max-width: 768px) {
-    margin-bottom: 1rem;
     padding-bottom: 0.75rem;
   }
 
@@ -24,6 +21,10 @@ const Title = styled.h1`
   font-weight: 600;
   font-family: inherit;
 
+  @media (max-width: 1024px) {
+    font-size: 1.75em;
+  }
+
   @media (max-width: 768px) {
     font-size: 1.5em;
     margin-bottom: 0.375rem;
@@ -35,6 +36,10 @@ const Subtitle = styled.p`
   color: rgba(33, 53, 71, 0.7);
   font-size: 1.1em;
   font-family: inherit;
+
+  @media (max-width: 1024px) {
+    font-size: 1em;
+  }
 
   @media (max-width: 768px) {
     font-size: 0.9em;

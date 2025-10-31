@@ -1,15 +1,15 @@
 import { LoadingSpinner } from "../ui/LoadingSpinner";
 import type { ExchangeRatesResponse } from "../../services/cnbApi";
 import styled from "styled-components";
+import { COLORS } from "../../theme/colors";
 
 const Message = styled.div`
-  color: rgba(33, 53, 71, 0.87);
+  color: ${COLORS.text.primary};
   font-family: inherit;
   text-align: center;
   padding: 2rem;
-
   @media (prefers-color-scheme: dark) {
-    color: rgba(255, 255, 255, 0.87);
+    color: ${COLORS.text.primaryDark};
   }
 `;
 
@@ -17,7 +17,7 @@ interface StateResolverProps {
   isLoading: boolean;
   error: Error | null;
   data: ExchangeRatesResponse | undefined;
-  children: React.ReactNode;
+  children: (data: ExchangeRatesResponse) => React.ReactNode;
 }
 
 export function StateResolver({
@@ -38,5 +38,5 @@ export function StateResolver({
     return <Message>No data available</Message>;
   }
 
-  return <>{children}</>;
+  return <>{children(data)}</>;
 }
