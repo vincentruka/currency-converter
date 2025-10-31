@@ -3,6 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import express from 'express'
 import { createServer as createViteServer } from 'vite'
+import { renderProduction, buildFinalHTML } from './src/utils/ssr-render'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const isProduction = process.env.NODE_ENV === 'production'
@@ -72,55 +73,33 @@ async function createServer() {
         dehydratedState = result.dehydratedState
         styleTags = result.styleTags || ''
       } else if (isProduction && render) {
-        // PRODUCTION: Use pre-built bundles
-        // 1. Read built index.html
-        template = await fs.readFile(
-          path.resolve(__dirname, 'dist/index.html'),
-          'utf-8'
-        )
-
-        // 2. Use pre-built render function
-        const result = await render(url)
-        appHtml = result.html
-        dehydratedState = result.dehydratedState
-        styleTags = result.styleTags || ''
+        // PRODUCTION: Use shared production rendering
+        const finalHtml = await renderProduction(url, __dirname)
+        res
+          .status(200)
+          .set({
+            'Content-Type': 'text/html',
+            'Cache-Control': 'public, max-age=3600',
+          })
+          .end(finalHtml)
+        return
       } else {
         throw new Error('Server not properly initialized')
       }
 
-      // Extract and inline CSS to prevent font flicker
+      // DEVELOPMENT: Extract and inline CSS from source
       let cssInjection = ''
       try {
-        if (isProduction) {
-          // In production, extract CSS file from dist/assets
-          const distAssetsDir = path.resolve(__dirname, 'dist/assets')
-          const files = await fs.readdir(distAssetsDir).catch(() => [])
-          const cssFile = files.find((file) => file.endsWith('.css'))
-          if (cssFile) {
-            const cssPath = path.resolve(distAssetsDir, cssFile)
-            const cssContent = await fs.readFile(cssPath, 'utf-8')
-            cssInjection = `<style id="critical-css">${cssContent}</style>`
-          }
-        } else {
-          // In development, inline CSS from source to prevent flicker
-          const cssPath = path.resolve(__dirname, 'src/index.css')
-          const cssContent = await fs.readFile(cssPath, 'utf-8')
-          cssInjection = `<style id="critical-css">${cssContent}</style>`
-        }
+        const cssPath = path.resolve(__dirname, 'src/index.css')
+        const cssContent = await fs.readFile(cssPath, 'utf-8')
+        cssInjection = `<style id="critical-css">${cssContent}</style>`
       } catch (e) {
         // If CSS extraction fails, continue without it
         console.warn('Could not inline CSS:', e)
       }
 
-      // 3. Inject the app-rendered HTML, styles, and dehydrated state
-      // Inject CSS first (before styled-components), then other styles
-      const finalHtml = template
-        .replace('</head>', `${cssInjection}${styleTags}</head>`)
-        .replace(`<div id="root"></div>`, `<div id="root">${appHtml}</div>`)
-        .replace(
-          '</body>',
-          `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(dehydratedState)};</script></body>`
-        )
+      // Inject the app-rendered HTML, styles, and dehydrated state
+      const finalHtml = buildFinalHTML(template, appHtml, dehydratedState, styleTags || '', cssInjection)
 
       // 4. Send the rendered HTML back with cache-control headers
       res
