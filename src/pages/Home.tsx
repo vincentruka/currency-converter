@@ -6,6 +6,7 @@ import { Paper } from "../components/ui/Paper";
 
 export function Home() {
   const { data, isLoading, error } = useExchangeRates();
+
   return (
     <div>
       <PageHeader

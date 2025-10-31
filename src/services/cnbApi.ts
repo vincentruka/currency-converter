@@ -30,9 +30,9 @@ function parseCNBData(text: string): ExchangeRatesResponse {
   const lines = text.split('\n').filter((line) => line.trim())
 
   // First line contains date and sequence number
-  // Format: "16.01.2025 #14"
+  // Format: "30 Oct 2025 #14"
   const firstLine = lines[0]
-  const dateMatch = firstLine.match(/^(\d{2}\.\d{2}\.\d{4})/)
+  const dateMatch = firstLine.match(/^(\d{1,2}\s+[A-Za-z]{3}\s+\d{4})/)
   const sequenceMatch = firstLine.match(/#(\d+)/)
 
   const date = dateMatch ? dateMatch[1] : ''

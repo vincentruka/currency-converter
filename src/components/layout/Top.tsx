@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
 const StyledTop = styled.header`
@@ -37,22 +37,33 @@ const NavList = styled.ul`
   gap: 2rem;
 `
 
-const NavLink = styled(Link)`
+const NavLinkStyled = styled(NavLink)`
   color: rgba(33, 53, 71, 0.87);
   text-decoration: inherit;
   font-weight: 500;
   font-family: inherit;
   transition: color 0.2s;
   padding: 0.5rem 0;
+  cursor: pointer;
 
   &:hover {
     color: #646cff;
+  }
+
+  &.active {
+    color: #646cff;
+    font-weight: 600;
+    border-bottom: 2px solid #646cff;
   }
 
   @media (prefers-color-scheme: dark) {
     color: rgba(255, 255, 255, 0.87);
 
     &:hover {
+      color: #646cff;
+    }
+
+    &.active {
       color: #646cff;
     }
   }
@@ -64,10 +75,10 @@ export function Top() {
       <StyledNav>
         <NavList>
           <li>
-            <NavLink to="/">Home</NavLink>
+            <NavLinkStyled to="/">Home</NavLinkStyled>
           </li>
           <li>
-            <NavLink to="/about">About</NavLink>
+            <NavLinkStyled to="/about">About</NavLinkStyled>
           </li>
         </NavList>
       </StyledNav>
