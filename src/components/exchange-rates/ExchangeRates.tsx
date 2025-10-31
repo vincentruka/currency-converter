@@ -1,4 +1,4 @@
-import type { ExchangeRate } from "../../services/cnbApi";
+import type { ExchangeRate } from "../../services/cnb-api";
 import { DesktopTableView } from "./DesktopTableView";
 import { MobileCardView } from "./MobileCardView";
 import { Wrapper } from "./ExchangeRates.styles";

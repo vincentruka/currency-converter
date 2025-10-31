@@ -1,5 +1,5 @@
 import type { QueryClient } from '@tanstack/react-query'
-import { prefetchIfStale } from './utils/prefetchIfStale'
+import { prefetchIfStale } from './utils/prefetch-if-stale'
 
 /**
  * Route prefetch function type.
@@ -28,8 +28,8 @@ export const routes: RouteConfig[] = [
     path: '/',
     prefetch: async (queryClient) => {
       // Dynamic imports: only load when this route's prefetch runs
-      const { EXCHANGE_RATES_QUERY_KEY } = await import('./hooks/useExchangeRates')
-      const { fetchExchangeRates } = await import('./services/cnbApi')
+      const { EXCHANGE_RATES_QUERY_KEY } = await import('./hooks/use-exchange-rates')
+      const { fetchExchangeRates } = await import('./services/cnb-api')
       
       await prefetchIfStale(queryClient, EXCHANGE_RATES_QUERY_KEY, fetchExchangeRates)
     },

@@ -1,5 +1,5 @@
 import { LoadingSpinner } from "../ui/LoadingSpinner";
-import type { ExchangeRatesResponse } from "../../services/cnbApi";
+import type { ExchangeRatesResponse } from "../../services/cnb-api";
 import styled from "styled-components";
 import { COLORS } from "../../theme/colors";
 

@@ -1,4 +1,4 @@
-import type { ExchangeRate } from '../../services/cnbApi'
+import type { ExchangeRate } from '../../services/cnb-api'
 import {
   StyledTable,
   TableHead,
