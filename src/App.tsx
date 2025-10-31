@@ -19,6 +19,10 @@ const ContentWrapper = styled.div`
   margin: 0 auto;
   padding: 3.5rem;
   text-align: center;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
 function App() {

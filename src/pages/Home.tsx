@@ -1,6 +1,6 @@
 import { useExchangeRates } from "../hooks/useExchangeRates";
 import { PageHeader } from "../components/layout/PageHeader";
-import { ExchangeRatesTable } from "../components/ExchangeRatesTable";
+import { ExchangeRatesTable } from "../components/exchange-rates/ExchangeRatesTable";
 import { StateResolver } from "../components/utils/StateResolver";
 import { Paper } from "../components/ui/Paper";
 

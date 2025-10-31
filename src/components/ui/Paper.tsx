@@ -15,6 +15,11 @@ export const Paper = styled.div`
       0px 1px 18px 0px rgba(0, 0, 0, 0.08);
   }
 
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+    border-radius: 6px;
+  }
+
   @media (prefers-color-scheme: dark) {
     background-color: rgba(26, 26, 26, 0.9);
     box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),

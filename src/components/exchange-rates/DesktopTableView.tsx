@@ -1,11 +1,15 @@
 import styled from 'styled-components'
-import type { ExchangeRate } from '../services/cnbApi'
+import type { ExchangeRate } from '../../services/cnbApi'
 
 const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   text-align: left;
   font-family: inherit;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 const TableHead = styled.thead`
@@ -76,34 +80,34 @@ const RateCell = styled(TableCell)`
   font-weight: 500;
 `
 
-interface ExchangeRatesTableProps {
+interface DesktopTableViewProps {
   rates: ExchangeRate[]
 }
 
-export function ExchangeRatesTable({ rates }: ExchangeRatesTableProps) {
+export function DesktopTableView({ rates }: DesktopTableViewProps) {
   return (
-      <StyledTable>
-        <TableHead>
-          <tr>
-            <TableHeader>Country</TableHeader>
-            <TableHeader>Currency</TableHeader>
-            <TableHeader>Amount</TableHeader>
-            <TableHeader>Code</TableHeader>
-            <TableHeader>Rate (CZK)</TableHeader>
-          </tr>
-        </TableHead>
-        <TableBody>
-          {rates.map((rate) => (
-            <TableRow key={rate.code}>
-              <TableCell>{rate.country}</TableCell>
-              <TableCell>{rate.currency}</TableCell>
-              <TableCell>{rate.amount}</TableCell>
-              <CodeCell>{rate.code}</CodeCell>
-              <RateCell>{rate.rate.toFixed(3)}</RateCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </StyledTable>
+    <StyledTable>
+      <TableHead>
+        <tr>
+          <TableHeader>Country</TableHeader>
+          <TableHeader>Currency</TableHeader>
+          <TableHeader>Amount</TableHeader>
+          <TableHeader>Code</TableHeader>
+          <TableHeader>Rate (CZK)</TableHeader>
+        </tr>
+      </TableHead>
+      <TableBody>
+        {rates.map((rate) => (
+          <TableRow key={rate.code}>
+            <TableCell>{rate.country}</TableCell>
+            <TableCell>{rate.currency}</TableCell>
+            <TableCell>{rate.amount}</TableCell>
+            <CodeCell>{rate.code}</CodeCell>
+            <RateCell>{rate.rate.toFixed(3)}</RateCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </StyledTable>
   )
 }
 

@@ -27,6 +27,10 @@ const StyledNav = styled.nav`
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 2rem;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
 `
 
 const NavList = styled.ul`
