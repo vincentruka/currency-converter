@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { routes } from '../routes'
+import { routes } from '../../routes'
 
 /**
  * Component that prefetches data when navigating to routes.

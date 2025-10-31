@@ -15,6 +15,6 @@ export default defineConfig({
     },
   },
   ssr: {
-    noExternal: ['@tanstack/react-query'],
+    noExternal: ['@tanstack/react-query', 'styled-components'],
   },
 })

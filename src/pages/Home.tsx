@@ -1,47 +1,24 @@
-import { useExchangeRates } from '../hooks/useExchangeRates'
+import { useExchangeRates } from "../hooks/useExchangeRates";
+import { PageHeader } from "../components/layout/PageHeader";
+import { ExchangeRatesTable } from "../components/ExchangeRatesTable";
+import { StateResolver } from "../components/utils/StateResolver";
+import { Paper } from "../components/ui/Paper";
 
 export function Home() {
-  const { data, isLoading, error } = useExchangeRates()
-
-  if (isLoading) {
-    return <div>Loading exchange rates...</div>
-  }
-
-  if (error) {
-    return <div>Error loading exchange rates: {error.message}</div>
-  }
-
-  if (!data) {
-    return <div>No data available</div>
-  }
-
+  const { data, isLoading, error } = useExchangeRates();
   return (
     <div>
-      <h1>Czech National Bank Exchange Rates</h1>
-      <p>Date: {data.date} (Sequence #{data.sequenceNumber})</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Country</th>
-            <th>Currency</th>
-            <th>Amount</th>
-            <th>Code</th>
-            <th>Rate (CZK)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.rates.map((rate) => (
-            <tr key={rate.code}>
-              <td>{rate.country}</td>
-              <td>{rate.currency}</td>
-              <td>{rate.amount}</td>
-              <td>{rate.code}</td>
-              <td>{rate.rate}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <PageHeader
+        title="Czech National Bank Exchange Rates"
+        subtitle={
+          data ? `Date: ${data.date} (Sequence #${data.sequenceNumber})` : ""
+        }
+      />
+      <Paper>
+        <StateResolver isLoading={isLoading} error={error} data={data}>
+          <ExchangeRatesTable rates={data!.rates} />
+        </StateResolver>
+      </Paper>
     </div>
-  )
+  );
 }
-

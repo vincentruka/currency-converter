@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { promises as fsPromises } from 'node:fs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -17,10 +18,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Render the app
     const url = req.url || '/'
-    const { html: appHtml, dehydratedState } = await render(url)
+    const { html: appHtml, dehydratedState, styleTags } = await render(url)
 
-    // Inject rendered HTML and dehydrated state
+    // Extract and inline CSS to prevent font flicker
+    let cssInjection = ''
+    try {
+      // In production on Vercel, extract CSS file from dist/assets
+      const distAssetsDir = path.join(__dirname, '../dist/assets')
+      const files = await fsPromises.readdir(distAssetsDir).catch(() => [])
+      const cssFile = files.find((file) => file.endsWith('.css'))
+      if (cssFile) {
+        const cssPath = path.join(distAssetsDir, cssFile)
+        const cssContent = await fsPromises.readFile(cssPath, 'utf-8')
+        cssInjection = `<style id="critical-css">${cssContent}</style>`
+      }
+    } catch (e) {
+      // If CSS extraction fails, continue without it
+      console.warn('Could not inline CSS:', e)
+    }
+
+    // Inject rendered HTML, styles, and dehydrated state
+    // Inject CSS first (before styled-components), then other styles
     const finalHtml = template
+      .replace('</head>', `${cssInjection}${styleTags || ''}</head>`)
       .replace(`<div id="root"></div>`, `<div id="root">${appHtml}</div>`)
       .replace(
         '</body>',

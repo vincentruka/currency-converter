@@ -11,7 +11,7 @@ async function createServer() {
   const app = express()
 
   let vite: Awaited<ReturnType<typeof createViteServer>> | null = null
-  let render: ((url: string) => Promise<{ html: string; dehydratedState: unknown }>) | null = null
+  let render: ((url: string) => Promise<{ html: string; dehydratedState: unknown; styleTags?: string }>) | null = null
 
   if (!isProduction) {
     // DEVELOPMENT: Use Vite dev server
@@ -52,6 +52,7 @@ async function createServer() {
       let template: string
       let appHtml: string
       let dehydratedState: unknown
+      let styleTags: string = ''
 
       if (!isProduction && vite) {
         // DEVELOPMENT: Use Vite dev server
@@ -69,6 +70,7 @@ async function createServer() {
         const result = await renderFn(url)
         appHtml = result.html
         dehydratedState = result.dehydratedState
+        styleTags = result.styleTags || ''
       } else if (isProduction && render) {
         // PRODUCTION: Use pre-built bundles
         // 1. Read built index.html
@@ -81,20 +83,53 @@ async function createServer() {
         const result = await render(url)
         appHtml = result.html
         dehydratedState = result.dehydratedState
+        styleTags = result.styleTags || ''
       } else {
         throw new Error('Server not properly initialized')
       }
 
-      // 3. Inject the app-rendered HTML and dehydrated state
+      // Extract and inline CSS to prevent font flicker
+      let cssInjection = ''
+      try {
+        if (isProduction) {
+          // In production, extract CSS file from dist/assets
+          const distAssetsDir = path.resolve(__dirname, 'dist/assets')
+          const files = await fs.readdir(distAssetsDir).catch(() => [])
+          const cssFile = files.find((file) => file.endsWith('.css'))
+          if (cssFile) {
+            const cssPath = path.resolve(distAssetsDir, cssFile)
+            const cssContent = await fs.readFile(cssPath, 'utf-8')
+            cssInjection = `<style id="critical-css">${cssContent}</style>`
+          }
+        } else {
+          // In development, inline CSS from source to prevent flicker
+          const cssPath = path.resolve(__dirname, 'src/index.css')
+          const cssContent = await fs.readFile(cssPath, 'utf-8')
+          cssInjection = `<style id="critical-css">${cssContent}</style>`
+        }
+      } catch (e) {
+        // If CSS extraction fails, continue without it
+        console.warn('Could not inline CSS:', e)
+      }
+
+      // 3. Inject the app-rendered HTML, styles, and dehydrated state
+      // Inject CSS first (before styled-components), then other styles
       const finalHtml = template
+        .replace('</head>', `${cssInjection}${styleTags}</head>`)
         .replace(`<div id="root"></div>`, `<div id="root">${appHtml}</div>`)
         .replace(
           '</body>',
           `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(dehydratedState)};</script></body>`
         )
 
-      // 4. Send the rendered HTML back
-      res.status(200).set({ 'Content-Type': 'text/html' }).end(finalHtml)
+      // 4. Send the rendered HTML back with cache-control headers
+      res
+        .status(200)
+        .set({
+          'Content-Type': 'text/html',
+          'Cache-Control': isProduction ? 'public, max-age=3600' : 'no-cache, no-store, must-revalidate',
+        })
+        .end(finalHtml)
     } catch (e: unknown) {
       if (!isProduction && vite) {
         vite.ssrFixStacktrace(e as Error)
