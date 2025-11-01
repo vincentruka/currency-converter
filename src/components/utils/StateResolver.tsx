@@ -31,7 +31,7 @@ export function StateResolver({
   }
 
   if (error) {
-    return <Message>Error loading exchange rates: {error.message}</Message>;
+    return <Message role="alert">Error loading exchange rates: {error.message}</Message>;
   }
 
   if (!data) {

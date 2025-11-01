@@ -49,8 +49,8 @@ export function LoadingSpinner({
 }) {
   return (
     <SpinnerContainer>
-      <Spinner />
-      <Message>{message}</Message>
+      <Spinner aria-hidden="true" />
+      <Message role="status" aria-live="polite">{message}</Message>
     </SpinnerContainer>
   );
 }

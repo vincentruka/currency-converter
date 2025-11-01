@@ -21,12 +21,24 @@ interface MobileCardViewProps {
 export function MobileCardView({ rates, onChangeCurrency, selectedCurrency }: MobileCardViewProps) {
   return (
     <MobileContainer>
-      {rates.map((rate) => (
-        <MobileCard 
-          key={rate.code} 
-          onClick={() => onChangeCurrency(rate)}
-          $isSelected={selectedCurrency?.code === rate.code}
-        >
+      {rates.map((rate) => {
+        const isSelected = selectedCurrency?.code === rate.code
+        return (
+          <MobileCard 
+            key={rate.code} 
+            onClick={() => onChangeCurrency(rate)}
+            $isSelected={isSelected}
+            role="button"
+            tabIndex={0}
+            aria-selected={isSelected}
+            aria-label={`Select ${rate.code} - ${rate.currency}`}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onChangeCurrency(rate)
+              }
+            }}
+          >
           <MobileCardLine>
             <MobileCardTitle>
               <MobileCode>{rate.code}</MobileCode>
@@ -46,7 +58,8 @@ export function MobileCardView({ rates, onChangeCurrency, selectedCurrency }: Mo
             </MobileDetails>
           </MobileCardLine>
         </MobileCard>
-      ))}
+        )
+      })}
     </MobileContainer>
   )
 }
