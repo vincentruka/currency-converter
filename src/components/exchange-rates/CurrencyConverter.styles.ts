@@ -22,7 +22,7 @@ export const ConverterContainer = styled.div`
   align-items: center;
   gap: 1rem;
   padding: 0.75rem;
-  background-color: rgb(255, 255, 255);
+  background-color: rgba(214, 214, 214, 0.15);
   border-radius: 6px;
   @media (max-width: 768px) {
     flex-direction: column;
@@ -93,7 +93,7 @@ export const Input = styled.input`
 
 export const CurrencyCode = styled.span<{ $visible?: boolean }>`
   font-weight: 600;
-  font-family: "Courier New", monospace;
+  font-family: inherit;
   font-size: 0.875rem;
   color: ${COLORS.text.primary};
   white-space: nowrap;
@@ -144,7 +144,7 @@ export const Result = styled.div<{ $isPlaceholder?: boolean }>`
   color: ${(props) => (props.$isPlaceholder ? COLORS.text.placeholder : COLORS.text.primary)};
   text-align: ${(props) => (props.$isPlaceholder ? "left" : "right")};
   justify-content: ${(props) => (props.$isPlaceholder ? "flex-start" : "flex-end")};
-  font-family: ${(props) => (props.$isPlaceholder ? "inherit" : "'Courier New', monospace")};
+  font-family: inherit;
   font-style: ${(props) => (props.$isPlaceholder ? "italic" : "normal")};
   @media (max-width: 768px) {
     padding: 0.375rem 0.5rem;

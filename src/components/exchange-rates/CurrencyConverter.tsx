@@ -1,5 +1,6 @@
 import type { ExchangeRate } from '../../../services/cnb-api'
 import { PLACEHOLDERS } from '../../config/constants'
+import { convertCurrency, formatConvertedAmount } from '../../utils/currency-conversion'
 import {
   ConverterWrapper,
   ConverterInner,
@@ -21,9 +22,8 @@ interface CurrencyConverterProps {
 }
 
 export function CurrencyConverter({ czkAmount, currency, onCzkAmountChange, disabled }: CurrencyConverterProps) {
-  // Calculate conversion: (czkAmount / rate) * amount
-  const czkValue = parseFloat(czkAmount) || 0
-  const convertedAmount = currency && czkValue > 0 ? (czkValue / currency.rate) * currency.amount : 0
+  const convertedAmount = convertCurrency(czkAmount, currency)
+  const formattedAmount = formatConvertedAmount(convertedAmount)
   const isPlaceholder = !currency
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,10 +51,7 @@ export function CurrencyConverter({ czkAmount, currency, onCzkAmountChange, disa
           <Arrow>→</Arrow>
           <ResultGroup>
             <Result $isPlaceholder={isPlaceholder}>
-              {isPlaceholder 
-                ? 'Pick a currency in a table'
-                : (convertedAmount > 0 ? convertedAmount.toFixed(4) : '0.0000')
-              }
+              {isPlaceholder ? 'Pick a currency in a table' : formattedAmount}
             </Result>
             <CurrencyCode $visible={!!currency}>
               {currency ? currency.code : PLACEHOLDERS.currencyCode}

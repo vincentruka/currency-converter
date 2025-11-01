@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  max-height: 60vh;
+  max-height: 70vh;
   overflow-y: auto;
   overflow-x: auto;
 
