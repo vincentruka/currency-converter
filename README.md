@@ -11,7 +11,7 @@ A modern web application that displays daily exchange rates from the Czech Natio
 - **Data Prefetching**: Intelligent route-based data prefetching during SSR for optimal user experience
 - **Responsive Design**: Modern UI that adapts to light and dark color schemes based on system preferences
 - **Data Caching**: Efficient data fetching and caching using React Query with 1-hour stale time
-- **Type Safety**: Fully typed with TypeScript and Zod schema validation
+- **Type Safety**: Fully typed with TypeScript
 - **Styled Components**: Component-scoped styling with CSS-in-JS
 
 ## Tech Stack
@@ -30,7 +30,6 @@ A modern web application that displays daily exchange rates from the Czech Natio
 - **TSX** - TypeScript execution for Node.js
 
 ### Additional Tools
-- **Zod** - Schema validation for API responses
 - **ESLint** - Code linting and quality checks
 
 ## Getting Started
@@ -109,7 +108,7 @@ currency-converter/
 │   │   ├── Home.tsx               # Home page with exchange rates
 │   │   └── About.tsx              # About page
 │   ├── services/
-│   │   └── cnbApi.ts              # CNB API service with Zod validation
+│   │   └── cnbApi.ts              # CNB API service
 │   ├── utils/
 │   │   └── prefetchIfStale.ts     # Prefetch utility for stale data
 │   ├── routes.ts                  # Route configuration with prefetch functions
@@ -142,7 +141,6 @@ The application uses Express to serve pre-rendered React components on the serve
 
 - Exchange rates are fetched from the CNB API
 - React Query handles caching with a 1-hour stale time
-- Zod schemas validate API responses for type safety
 - Prefetching occurs during SSR for the current route
 
 ## Deployment

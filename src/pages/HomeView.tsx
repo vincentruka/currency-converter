@@ -1,4 +1,4 @@
-import { useCurrencyConverter } from "../hooks/use-currency-converter";
+import { useState } from "react";
 import { PageHeader } from "../components/layout/PageHeader";
 import { ExchangeRates } from "../components/exchange-rates/ExchangeRates";
 import { StateResolver } from "../components/utils/StateResolver";
@@ -23,7 +23,8 @@ export function HomeView({
   isLoading,
   error,
 }: HomeViewProps) {
-  const { czkAmount, selectedCurrency, setCzkAmount, setSelectedCurrency } = useCurrencyConverter();
+  const [czkAmount, setCzkAmount] = useState<string>("");
+  const [selectedCurrency, setSelectedCurrency] = useState<ExchangeRate | null>(null);
 
   const subtitle = data
     ? `Date: ${data.date} (Sequence #${data.sequenceNumber})`

@@ -48,7 +48,7 @@ export async function fetchExchangeRates(): Promise<ExchangeRatesResponse> {
   return parseCNBData(text)
 }
 
-function parseCNBData(text: string): ExchangeRatesResponse {
+export function parseCNBData(text: string): ExchangeRatesResponse {
   const lines = text.split('\n').filter((line) => line.trim())
 
   if (lines.length < 3) {
