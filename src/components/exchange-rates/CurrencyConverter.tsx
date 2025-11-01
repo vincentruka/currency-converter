@@ -39,21 +39,28 @@ export function CurrencyConverter({ czkAmount, currency, onCzkAmountChange, disa
       <ConverterInner>
         <ConverterContainer>
           <InputGroup>
-            <Label>CZK:</Label>
+            <Label htmlFor="czk-amount-input">CZK:</Label>
             <Input
+              id="czk-amount-input"
               type="text"
               value={czkAmount}
               onChange={handleInputChange}
               placeholder="0"
               disabled={disabled}
+              aria-label="Amount in Czech crowns"
             />
           </InputGroup>
-          <Arrow>→</Arrow>
+          <Arrow aria-hidden="true">→</Arrow>
           <ResultGroup>
-            <Result $isPlaceholder={isPlaceholder}>
+            <Result 
+              $isPlaceholder={isPlaceholder}
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
               {isPlaceholder ? 'Pick a currency in a table' : formattedAmount}
             </Result>
-            <CurrencyCode $visible={!!currency}>
+            <CurrencyCode $visible={!!currency} aria-label="Currency code">
               {currency ? currency.code : PLACEHOLDERS.currencyCode}
             </CurrencyCode>
           </ResultGroup>
