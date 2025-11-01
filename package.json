@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "rm -rf dist && tsc -b && vite build && vite build --ssr src/entry-server.tsx",
+    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx",
     "lint": "eslint .",
     "preview": "NODE_ENV=production tsx server.ts"
   },

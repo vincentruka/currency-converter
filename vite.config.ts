@@ -6,8 +6,6 @@ import { resolve } from 'path'
 export default defineConfig({
   plugins: [react()],
   build: {
-    // Don't clean dist during build so SSR bundle is preserved
-    emptyOutDir: false,
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
