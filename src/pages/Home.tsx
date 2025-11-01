@@ -5,7 +5,7 @@ import { ExchangeRates } from "../components/exchange-rates/ExchangeRates";
 import { StateResolver } from "../components/utils/StateResolver";
 import { Paper } from "../components/ui/Paper";
 import { CurrencyConverter } from "../components/exchange-rates/CurrencyConverter";
-import type { ExchangeRate } from "../services/cnb-api";
+import type { ExchangeRate } from "../../services/cnb-api";
 import {
   HeaderContainer,
   HeaderSection,

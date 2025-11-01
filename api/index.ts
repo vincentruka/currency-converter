@@ -14,9 +14,13 @@ type RenderFn = (url: string) => Promise<RenderResult>;
 
 // Resolve paths relative to project root (works on Vercel)
 // On Vercel, process.cwd() points to /var/task (project root)
+// In vercel dev, we use __dirname equivalent from import.meta.url
 function resolveDistPath(relativePath: string): string {
-  const projectRoot = process.cwd();
-  return path.join(projectRoot, "dist", relativePath);
+  // Try process.cwd() first (works in production Vercel and vercel dev)
+  const cwdPath = path.join(process.cwd(), "dist", relativePath);
+  
+  // Default to cwd path (for error messages)
+  return cwdPath;
 }
 
 // Helper functions
@@ -124,6 +128,31 @@ function handleError(error: unknown, res: VercelResponse): void {
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
+    // Handle asset requests - serve them directly from dist
+    const url = req.url || "/";
+    
+    // Check if this is an asset request
+    if (url.startsWith("/assets/") || url.startsWith("/vite.svg") || url.match(/\.(js|css|svg|png|jpg|jpeg|gif|ico|woff|woff2|ttf|eot)$/)) {
+      const assetPath = url.replace(/^\//, "");
+      const filePath = resolveDistPath(assetPath);
+      
+      if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+        const content = fs.readFileSync(filePath);
+        const contentType = url.endsWith(".js") ? "application/javascript" :
+                           url.endsWith(".css") ? "text/css" :
+                           url.endsWith(".svg") ? "image/svg+xml" :
+                           "application/octet-stream";
+        
+        res.setHeader("Content-Type", contentType);
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        return res.send(content);
+      } else {
+        // Asset not found - log for debugging
+        console.warn(`Asset not found: ${filePath} (requested: ${url}, cwd: ${process.cwd()})`);
+        return res.status(404).send("Asset not found");
+      }
+    }
+
     // Load the built server render function
     const render = await loadRenderFunction();
 
@@ -137,7 +166,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Render the app
-    const url = req.url || "/";
     const result = await render(url);
 
     // Extract and inline CSS to prevent font flicker

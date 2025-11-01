@@ -15,11 +15,33 @@ export interface ExchangeRatesResponse {
 const CNB_API_URL =
   'https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt'
 
+const API_ENDPOINT = '/api/cnb/rates'
+
+/**
+ * Detects if code is running in the browser (client) or on the server.
+ * @returns true if running in the browser, false if running on the server
+ */
+function isClient(): boolean {
+  // Check if we're in a browser environment
+  // In Node.js, 'window' is undefined. In browser, it's defined.
+  return typeof (globalThis as { window?: unknown }).window !== 'undefined'
+}
+
 export async function fetchExchangeRates(): Promise<ExchangeRatesResponse> {
-  const response = await fetch(CNB_API_URL)
+  // On the server (SSR), fetch directly from CNB API
+  // On the client (browser), fetch from our API endpoint
+  const url = isClient() ? API_ENDPOINT : CNB_API_URL
+  
+  const response = await fetch(url)
 
   if (!response.ok) {
     throw new Error(`Failed to fetch exchange rates: ${response.statusText}`)
+  }
+
+  // On the client, the API returns JSON. On the server, it returns text.
+  if (isClient()) {
+    const data = await response.json() as ExchangeRatesResponse
+    return data
   }
 
   const text = await response.text()

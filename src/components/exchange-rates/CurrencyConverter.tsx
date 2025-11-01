@@ -1,4 +1,4 @@
-import type { ExchangeRate } from '../../services/cnb-api'
+import type { ExchangeRate } from '../../../services/cnb-api'
 import { PLACEHOLDERS } from '../../config/constants'
 import {
   ConverterWrapper,

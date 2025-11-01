@@ -29,7 +29,7 @@ export const routes: RouteConfig[] = [
     prefetch: async (queryClient) => {
       // Dynamic imports: only load when this route's prefetch runs
       const { EXCHANGE_RATES_QUERY_KEY } = await import('./hooks/use-exchange-rates')
-      const { fetchExchangeRates } = await import('./services/cnb-api')
+      const { fetchExchangeRates } = await import('../services/cnb-api')
       
       await prefetchIfStale(queryClient, EXCHANGE_RATES_QUERY_KEY, fetchExchangeRates)
     },
